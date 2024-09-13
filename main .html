@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Моя первая работа!</title>
+    <link rel="icon" href="image/favicon.png" type="image/png">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c4c4c4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            transition: all 1s ease;
+        }
+
+        h1 {
+            color: black;
+            transition: all 1s ease;
+        }
+
+        p {
+            transition: all 1s ease;
+        }
+
+        img {
+            transition: transform 0.5s ease;
+        }
+        img#myImage {
+    		display: block;
+    		margin-left: auto;
+   			margin-right: auto;
+		}
+
+        img:hover {
+            transform: scale(1.1);
+        }
+
+        .modern {
+            background-color: #282c34;
+            color: #7054c2;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .modern h1 {
+            font-size: 3rem;
+            color: #fff;
+        }
+
+        .modern p {
+            color: #7054c2;
+        }
+
+        /* Стили для блоков коллег */
+        .person {
+            display: none;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .person.active {
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .person img {
+            border-radius: 10%;
+            width: 250px;
+            margin-right: 60px;
+        }
+
+        .person p {
+            max-width: 600px;
+            font-size: 1.4rem;
+            text-align: justify;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Финальный блок */
+        .final {
+            display: none;
+            opacity: 0;
+            text-align: center;
+            transition: opacity 2s ease;
+        }
+
+        .final.active {
+            display: block;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Добро пожаловать на мой первый сайт!</h1>
+    <p>Это моя первая работа, надеюсь вам понравится...</p>
+    <p id="just"></p>
+    <p id="clickPrompt">Тыкни на картинку, и мы продолжим с моим сайтом 😊</p>
+    <img src="image/myimage.png" alt="Мое изображение" width="100" id="myImage">
+
+    <!-- Блоки для каждого коллеги с фото -->
+    <div class="person" id="colleague1">
+        <img src="image/kirill.jpg" alt="Фото Кирилла">
+        <div>
+            <h2>Это мой коллега - Калинин Кирилл</h2>
+            <p>Я был главным инженером в нашем проекте. Решал самые сложные технические задачи.
+            <p>Интересуюсь в играх на компьютере, интересно их создание и редезайн. 
+            Учился на языке программирования Pythoon
+        </div>
+    </div>
+
+    <div class="person" id="colleague2">
+        <img src="image/naruza.jpg" alt="Фото Наврузы">
+        <div>
+            <h2>Это моя коллега -  Бахирова Навруза</h2>
+            <p>Навруза — дизайнер. Я создавала весь визуальный стиль нашего проекта.
+            <p> Мне нравится читать и коллекционировать книги. На програмирование поступила, 
+            потому что для меня это развитие в высокооплачиваемой и интересной профессии 
+        </div>
+    </div>
+
+    <div class="person" id="colleague3">
+        <img src="image/vanchleno.jpg" alt="Фото ивана">
+        <div>
+            <h2>Это мой коллега - Сутормин Иван</h2>
+            <p>Отвечал за разработку модулей и интеграцию всех систем.
+            <p>Мое хобби это игра на гитаре, интересуюсь програмирование и хочу разработать собственную игру
+        </div>
+    </div>
+
+    <div class="person" id="colleague4">
+        <img src="image/ivanio.jpg" alt="Фото миня">
+        <div>
+            <h2>А это я - Васильев Иван, руководитель проекта</h2>
+            <p> Я следил за визуальным стилем, работоспособностью сайта и прохождению дед лайна, 
+        <p> поступил на веб разработку из-за увлеченности в эту профессию, пытался создавать моды 
+            для онлайн игр, таких как Garrys mod .
+        </div>
+    </div>
+
+    <!-- Кнопки для перехода -->
+    <div class="button-container" id="navButtons" style="display: none;">
+        <button id="prevButton" onclick="prevColleague()">Назад</button>
+        <button id="nextButton" onclick="nextColleague()">Далее</button>
+    </div>
+
+    <!-- Финальный блок -->
+    <div class="final" id="finalMessage">
+        <h2>Спасибо за внимание!</h2>
+        <p>Надеюсь, вам было интересно узнать о моей команде.</p>
+        <div class="button-container">
+            <button id="restartButton" onclick="restart()" disabled>Начать сначала</button>
+            <button id="closeButton" onclick="closePage()" disabled>Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        let currentColleague = 1;
+        const totalColleagues = 4;
+        let isTrolled = false;
+
+        // Клик по картинке для смены стиля и перехода на коллег
+        document.getElementById('myImage').addEventListener('click', function () {
+            if (!isTrolled) {
+                // Первый клик: тролль-эффект
+                document.body.classList.add('modern');
+                document.querySelector('h1').textContent = 'Ха! За троллил.';
+                document.querySelector('p').textContent = 'Теперь добро пожаловать на мой сайт!';
+
+                // Смена картинки
+                this.src = 'image/newimage.png';
+
+                // Убираем надпись под картинкой, добавляем новую
+                document.getElementById('just').textContent = "Тыкни на картинку, чтобы познакомиться с моими коллегами!";
+                document.getElementById('clickPrompt').style.display = 'none';
+
+                isTrolled = true;
+            } else {
+                // Исчезновение части контента перед переходом на знакомство
+                document.querySelector('h1').style.display = 'none';
+                document.querySelector('p').style.display = 'none';
+                document.getElementById('just').style.display = 'none';
+                document.getElementById('myImage').style.display = 'none'; // Скрываем картинку
+
+                showColleague(1); // Показать первого коллегу
+                document.getElementById('navButtons').style.display = 'block'; // Показать кнопки "Далее" и "Назад"
+            }
+        });
+
+        // Переход к следующему коллеге
+        function nextColleague() {
+            if (currentColleague < totalColleagues) {
+                currentColleague++;
+                showColleague(currentColleague);
+            } else if (currentColleague === totalColleagues) {
+                showFinalMessage(); // Переход на финальный блок
+            }
+        }
+
+        // Переход к предыдущему коллеге
+        function prevColleague() {
+            if (currentColleague > 1) {
+                currentColleague--;
+                showColleague(currentColleague);
+            }
+        }
+
+        // Показать коллегу
+        function showColleague(number) {
+            hideAll();
+            document.getElementById(`colleague${number}`).classList.add('active');
+
+            // Обновление состояния кнопок "Назад" и "Далее"
+            document.getElementById('prevButton').disabled = number === 1;
+        }
+
+        // Показать финальный блок
+        function showFinalMessage() {
+            hideAll();
+            document.getElementById('finalMessage').classList.add('active');
+            document.getElementById('navButtons').style.display = 'none'; // Скрываем кнопки навигации
+            lockFinalButtons(); // Блокируем кнопки на 0.8 секунд
+        }
+
+        // Скрыть все блоки коллег
+        function hideAll() {
+            for (let i = 1; i <= totalColleagues; i++) {
+                document.getElementById(`colleague${i}`).classList.remove('active');
+            }
+            document.getElementById('finalMessage').classList.remove('active');
+        }
+
+        // Функция для кнопки "Начать сначала"
+        function restart() {
+            currentColleague = 1;
+            hideAll();
+            document.body.classList.remove('modern');
+            document.getElementById('myImage').src = 'image/myimage.png';
+            document.getElementById('myImage').style.display = 'block';
+            document.getElementById('clickPrompt').style.display = 'block';
+            document.querySelector('h1').style.display = 'block';
+            document.querySelector('p').style.display = 'block';
+            document.getElementById('just').textContent = "";
+            document.getElementById('navButtons').style.display = 'none'; // Скрыть кнопки
+            isTrolled = false;
+        }
+
+        // Блокируем кнопки "Начать сначала" и "Закрыть" на 0.8 секунд
+        function lockFinalButtons() {
+            document.getElementById('restartButton').disabled = true;
+            document.getElementById('closeButton').disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('restartButton').disabled = false;
+                document.getElementById('closeButton').disabled = false;
+            }, 800);
+        }
+
+        // Функция для кнопки "Закрыть"
+        function closePage() {
+            window.close(); // Закрыть окно
+        }
+    </script>
+</body>
+
+</html>
